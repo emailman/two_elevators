@@ -1,0 +1,6 @@
+{
+  "outputDirectory": "build/kotlin-webpack/wasmJs/productionExecutable",
+  "buildCommand": "",
+  "installCommand": "",
+  "framework": null
+}
