@@ -12,7 +12,23 @@ A dual elevator simulation built with Kotlin/Compose for WebAssembly (WASM). The
 ## Project Structure
 ```
 src/wasmJsMain/kotlin/
-└── Main.kt          # All application code (single file)
+├── Main.kt                      # Entry point
+├── model/                       # Data models
+│   ├── Direction.kt
+│   ├── DoorState.kt
+│   ├── ElevatorState.kt
+│   └── BuildingState.kt
+├── domain/                      # Business logic
+│   └── ElevatorLogic.kt
+├── viewmodel/                   # State management
+│   └── ElevatorController.kt
+└── ui/                          # UI layer
+    ├── App.kt                   # Root composable with responsive layout
+    └── components/
+        ├── Buttons.kt           # FloorButton, CallButton (with size params)
+        ├── CallButtonPanel.kt   # Hall call buttons (with scaleFactor)
+        ├── ElevatorButtonPanel.kt # Cab buttons (with scaleFactor)
+        └── ElevatorShaft.kt     # Canvas-based elevator visualization
 ```
 
 ## Key Components
@@ -53,3 +69,21 @@ src/wasmJsMain/kotlin/
 - 2-second door dwell time
 - 4-second idle timeout before returning home
 - Smart dispatching based on ETA calculation
+
+## Responsive Layout (In Progress)
+
+### Current Implementation
+- `BoxWithConstraints` in App.kt detects screen width
+- `scaleFactor` calculated based on width breakpoints:
+  - >= 600dp: 1.0 (full size)
+  - 400-600dp: 0.75
+  - < 400dp: 0.6
+- Button sizes scale via `buttonSize` parameter in FloorButton/CallButton
+- Panel padding and spacing scale in ElevatorButtonPanel
+- Call button panel aligned with elevator floors via matching headers
+
+### Future Mobile Work
+- Test and refine scaling on actual mobile devices
+- Consider alternative layouts for very narrow screens (stacked vs side-by-side)
+- May need to hide cab button panels on mobile or use overlay/modal
+- Test touch target sizes meet accessibility guidelines (48dp minimum)
