@@ -78,7 +78,7 @@ fun CallButton(
     Button(
         onClick = onClick,
         modifier = Modifier
-            .size(36.dp)
+            .size(30.dp)
             .clip(CircleShape),
         shape = CircleShape,
         colors = ButtonDefaults.buttonColors(
@@ -89,7 +89,7 @@ fun CallButton(
         ),
         contentPadding = PaddingValues(0.dp)
     ) {
-        Canvas(modifier = Modifier.size(18.dp)) {
+        Canvas(modifier = Modifier.size(14.dp)) {
             val arrowPath = Path().apply {
                 if (isUp) {
                     moveTo(size.width / 2, 0f)

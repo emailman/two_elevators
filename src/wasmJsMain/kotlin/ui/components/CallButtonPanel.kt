@@ -19,38 +19,52 @@ fun CentralCallButtonPanel(
     buildingState: BuildingState,
     modifier: Modifier = Modifier
 ) {
-    BoxWithConstraints(
+    Column(
         modifier = modifier,
-        contentAlignment = Alignment.Center
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val totalFloors = 6
-        val shaftHeight = maxHeight * 0.85f
-        val floorHeight = shaftHeight / totalFloors
-        val verticalOffset = (maxHeight - shaftHeight) / 2 + 32.dp // Account for label
+        Text(
+            text = "CALL",
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.onBackground,
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            text = "BUTTONS",
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.onBackground,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(8.dp))
 
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()
+        // Inner BoxWithConstraints matches elevator shaft's 85% height
+        BoxWithConstraints(
+            modifier = Modifier.fillMaxHeight(0.85f)
         ) {
-            Text(
-                text = "CALL",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onBackground,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+            val totalFloors = 6
+            val floorHeight = maxHeight / totalFloors
 
-            Box(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                for (floor in 1..totalFloors) {
-                    val floorCenterY = verticalOffset + shaftHeight -
-                            (floorHeight * floor) + (floorHeight / 2)
+            for (floor in 1..totalFloors) {
+                // Calculate from bottom - same as elevator shaft
+                // Subtract 28.dp to compensate for taller header (extra "BUTTONS" line)
+                // Add 2.dp to account for the floorGap in elevator shaft (4.dp gap at top of each floor)
+                val floorCenterY = maxHeight - (floorHeight * floor) + (floorHeight / 2) - 26.dp
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .offset(y = floorCenterY - 24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // Floor number centered above the arrows
+                    Text(
+                        text = floor.toString(),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        fontWeight = FontWeight.Bold
+                    )
 
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .offset(y = floorCenterY - 18.dp - 32.dp),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -63,8 +77,8 @@ fun CentralCallButtonPanel(
                                     // Check if either elevator is at this floor with doors open
                                     val elevatorAtFloor = buildingState.getAllElevators().any { elevator ->
                                         elevator.currentFloor == floor &&
-                                        !elevator.isMoving &&
-                                        elevator.doorState == DoorState.OPEN
+                                                !elevator.isMoving &&
+                                                elevator.doorState == DoorState.OPEN
                                     }
                                     if (elevatorAtFloor) return@CallButton
 
@@ -77,7 +91,7 @@ fun CentralCallButtonPanel(
                                 }
                             )
                         } else {
-                            Spacer(modifier = Modifier.size(36.dp))
+                            Spacer(modifier = Modifier.size(30.dp))
                         }
 
                         // Down button (floors 2-6 only)
@@ -88,8 +102,8 @@ fun CentralCallButtonPanel(
                                 onClick = {
                                     val elevatorAtFloor = buildingState.getAllElevators().any { elevator ->
                                         elevator.currentFloor == floor &&
-                                        !elevator.isMoving &&
-                                        elevator.doorState == DoorState.OPEN
+                                                !elevator.isMoving &&
+                                                elevator.doorState == DoorState.OPEN
                                     }
                                     if (elevatorAtFloor) return@CallButton
 
@@ -102,7 +116,7 @@ fun CentralCallButtonPanel(
                                 }
                             )
                         } else {
-                            Spacer(modifier = Modifier.size(36.dp))
+                            Spacer(modifier = Modifier.size(30.dp))
                         }
                     }
                 }

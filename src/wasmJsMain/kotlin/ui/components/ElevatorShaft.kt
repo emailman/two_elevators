@@ -11,12 +11,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import model.Direction
 import model.ElevatorState
 
@@ -26,11 +22,9 @@ fun ElevatorShaft(
     label: String,
     modifier: Modifier = Modifier
 ) {
-    val textMeasurer = rememberTextMeasurer()
     val carColor = Color(0xFFFFB300)
     val doorColor = Color(0xFF757575)
     val floorColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.2f)
-    val labelColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
 
     Box(
         modifier = modifier,
@@ -39,13 +33,12 @@ fun ElevatorShaft(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Elevator label - offset to center over shaft (accounting for floor label space)
+            // Elevator label
             Text(
                 text = label,
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onBackground,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(start = 20.dp)
+                fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -56,35 +49,17 @@ fun ElevatorShaft(
             ) {
                 val totalFloors = 6
                 val floorHeight = size.height / totalFloors
-                val shaftLeft = 40.dp.toPx()
-                val shaftWidth = size.width - shaftLeft
+                val shaftWidth = size.width
                 val carWidth = shaftWidth * 0.8f
-                val carLeftOffset = shaftLeft + (shaftWidth - carWidth) / 2
+                val carLeftOffset = (shaftWidth - carWidth) / 2
 
                 val floorGap = 4.dp.toPx()
                 for (floor in 1..totalFloors) {
                     val floorTop = size.height - (floor * floorHeight)
 
-                    val labelText = floor.toString()
-                    val textLayoutResult = textMeasurer.measure(
-                        text = labelText,
-                        style = TextStyle(
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = labelColor
-                        )
-                    )
-                    drawText(
-                        textLayoutResult = textLayoutResult,
-                        topLeft = Offset(
-                            x = (shaftLeft - textLayoutResult.size.width) / 2,
-                            y = floorTop + (floorHeight - textLayoutResult.size.height) / 2
-                        )
-                    )
-
                     drawRect(
                         color = floorColor,
-                        topLeft = Offset(shaftLeft, floorTop + floorGap),
+                        topLeft = Offset(0f, floorTop + floorGap),
                         size = Size(shaftWidth, floorHeight - floorGap)
                     )
                 }
